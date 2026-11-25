@@ -174,8 +174,8 @@ def save_split(images: list[Path], class_name: str) -> dict[str, int]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--images-per-class", type=int, default=200,
-        help="Maximum number of cached/downloaded source images per class (default: 200).",
+        "--images-per-class", type=int, default=80,
+        help="Maximum number of cached/downloaded source images per class (default: 80).",
     )
     args = parser.parse_args()
     if args.images_per_class < 4:
@@ -208,6 +208,15 @@ def main() -> int:
             "Could not obtain at least four source images for every class "
             f"({', '.join(missing)}). No synthetic fallback was mixed with real images. "
             "Check the network and rerun the script."
+        )
+    elif any(len(class_images[name]) < args.images_per_class for name in CLASSES):
+        counts = ", ".join(
+            f"{name}: {len(class_images[name])}" for name in CLASSES
+        )
+        raise RuntimeError(
+            f"Could not reach the requested {args.images_per_class} images per class "
+            f"({counts}). Existing dataset splits were left unchanged. Check the "
+            "network or rerun later to use the cached downloads."
         )
 
     clear_generated_images()

@@ -186,6 +186,9 @@ def render_diagnosis(image: Image.Image, filename: str, true_class: str | None) 
     info = DISEASE_INFO.get(predicted_class, {})
     st.subheader(info.get("name", predicted_class.replace("___", " — ")))
     st.metric("Model confidence", f"{confidence:.1%}")
+    st.caption(
+        "Prediction scores are softmax outputs and are not calibrated probabilities."
+    )
     st.markdown("**Top model predictions for this image**")
     st.dataframe(
         pd.DataFrame(
@@ -199,7 +202,6 @@ def render_diagnosis(image: Image.Image, filename: str, true_class: str | None) 
     )
     if true_class:
         st.caption(
-            "Confidence is the model's softmax score, not a calibrated probability. "
             f"Prediction {'matches' if predicted_class == true_class else 'differs from'} "
             "the dataset folder label."
         )

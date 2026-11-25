@@ -18,12 +18,13 @@ python train_model.py
 streamlit run app.py
 ```
 
-`prepare_dataset.py` downloads up to 200 images for each target class from the public
+`prepare_dataset.py` downloads up to 80 images for each target class from the public
 [PlantVillage-Dataset repository](https://github.com/spMohanty/PlantVillage-Dataset)
 and caches the source images in `raw_dataset/`. It writes validated, stratified image
 files into `dataset/train/`, `dataset/valid/`, and `dataset/test/` using 70/15/15
 splits. To request a different maximum, run `python prepare_dataset.py
---images-per-class 300`.
+--images-per-class 120`. If the source throttles downloads before that count is
+reached, the script stops without replacing the existing dataset split.
 
 If downloading fails for every class, the script creates explicitly labeled local
 visual fallback images so the app can still be exercised. Those illustrations are
