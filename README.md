@@ -6,16 +6,36 @@ does not call a cloud API.
 
 ## Setup and run (Windows PowerShell)
 
-From this project folder:
+Use 64-bit Python 3.12 for this project. Open PowerShell in this project folder.
+The following commands replace any existing `.venv` (which may contain packages
+installed for a different Python version), then create a clean environment and
+install the dependencies:
 
 ```powershell
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-python prepare_dataset.py
-python train_model.py
-streamlit run app.py
+if (Test-Path .venv) { Remove-Item -Recurse -Force .venv }
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+Run the app:
+
+```powershell
+.\.venv\Scripts\python.exe -m streamlit run app.py
+```
+
+The commands above use the virtual environment's Python directly, so you do not
+need to activate it. This also avoids PowerShell execution-policy errors from
+running `Activate.ps1` and ensures Streamlit is run from the environment where
+the dependencies were installed. If the Python 3.12 launcher command is not
+available, install 64-bit Python 3.12 and rerun the setup commands.
+
+The repository includes a dataset and a trained model. To recreate the dataset
+or train a new model, run these optional commands before starting the app:
+
+```powershell
+.\.venv\Scripts\python.exe prepare_dataset.py
+.\.venv\Scripts\python.exe train_model.py
 ```
 
 `prepare_dataset.py` downloads up to 80 images for each target class from the public
